@@ -157,12 +157,9 @@
             .atmosphere-grid .atmosphere-card:nth-child(3) { grid-column: span 2; aspect-ratio: 2/1; }
             .hero-image-hint { width: 140px; height: 140px; font-size: 3.5rem; right: 2%; bottom: 10px; }
 
-            /* Улучшения для страницы меню на телефонах */
             .menu-header {
                 padding: 16px 14px;
                 top: var(--nav-height);
-                position: sticky;
-                z-index: 50;
             }
             .menu-search {
                 padding: 10px 16px;
@@ -200,7 +197,6 @@
             .atmosphere-grid .atmosphere-card:nth-child(3) { grid-column: span 1; aspect-ratio: 1; }
             .hero-image-hint { width: 100px; height: 100px; font-size: 2.5rem; right: 0; bottom: 40px; opacity: 0.7; }
 
-            /* Дополнительные улучшения */
             .menu-header {
                 padding: 12px 10px;
             }
@@ -599,6 +595,15 @@
                     mobileMenu.classList.remove('open');
                     mobileOverlay.classList.remove('active');
                 }
+                if (page === 'menu') {
+                    renderMenu();
+                    // прокрутка к списку, чтобы фильтры не мешали
+                    setTimeout(() => {
+                        if (menuGrid) {
+                            menuGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    }, 100);
+                }
             }
 
             function renderMenu() {
@@ -630,6 +635,12 @@
                     e.target.classList.add('active');
                     currentFilter = e.target.dataset.filter;
                     renderMenu();
+                    // плавно показываем список, убирая фильтры из виду
+                    setTimeout(() => {
+                        if (menuGrid) {
+                            menuGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    }, 50);
                 }
             });
             menuSearch.addEventListener('input', renderMenu);
@@ -654,6 +665,7 @@
 
             window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 40));
 
+            // начальный рендер меню
             renderMenu();
         })();
     </script>
